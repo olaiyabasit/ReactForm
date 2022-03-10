@@ -99,12 +99,23 @@ function App() {
     message: "",
   };
 
-  const [state, setState] = useState(initialState);
+  const [form, setForm] = useState(initialState);
   const [error, setError] = useState("");
 
-  const handleInput = () => {};
+  const handleInput = (e) => {
+    const inputName = e.currentTarget.name;
+    const value = e.currentTarget.value;
+    setForm((prev) => ({ ...prev, [inputName]: value }));
+  };
 
-  const handleSubmit = (e) => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    for (let key in form) {
+      if (form[key] === "") {
+        setError(`you must provide the ${key}`);
+      }
+    }
+  };
 
   return (
     <>
@@ -116,32 +127,50 @@ function App() {
           <StyledInput
             type="name"
             name="name"
-            value={state.name}
+            value={form.name}
             onChange={handleInput}
           />
           <label htmlFor="email">Email</label>
           <StyledInput
             type="email"
             name="email"
-            value={state.email}
+            value={form.email}
             onChange={handleInput}
           />
           <StyledFieldset>
             <legend>Gender</legend>
             <label>
               Female
-              <input type="radio" value="female" name="gender" />
+              <input
+                type="radio"
+                value="female"
+                name="gender"
+                checked={form.gender === "female"}
+                onChange={handleInput}
+              />
             </label>
             <label>
               Male
-              <input type="radio" value="male" name="gender" />
+              <input
+                type="radio"
+                value="male"
+                name="gender"
+                checked={form.gender === "male"}
+                onChange={handleInput}
+              />
             </label>
           </StyledFieldset>
           <label htmlFor="message">Message</label>
-          <StyledTextArea name="message" />
-          <StyledError>
-            <p>Error message will be here</p>
-          </StyledError>
+          <StyledTextArea
+            name="message"
+            value={form.message}
+            onChange={handleInput}
+          />
+          {error && (
+            <StyledError>
+              <p>{error}</p>
+            </StyledError>
+          )}
           <StyledButton type="submit">Send Message</StyledButton>
         </StyledForm>
       </FormWrapper>
